@@ -25,8 +25,8 @@ func (ur *userRepository) Register(user model.User) (model.User, error) {
 }
 
 func (ur *userRepository) FindByUsername(username string) (model.User, error) {
-	userRes := model.User{}
+	var user model.User
 
-	err := ur.DB.Where("username = ?", username).First(&userRes).Error
-	return userRes, err
+	err := ur.DB.Where("username = ?", username).First(&user).Error
+	return user, err
 }
