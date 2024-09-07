@@ -21,24 +21,53 @@ func (c *userController) Register(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&userRegisterDTO); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"status": "error",
+			"status":  "error",
 			"message": err.Error(),
 		})
 		return
 	}
 
+	// hit service
 	user, err := c.userService.Register(userRegisterDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"status": "error",
+			"status":  "error",
 			"message": err.Error(),
 		})
 		return
 	}
 
 	ctx.JSON(http.StatusCreated, gin.H{
-		"status": "success",
+		"status":  "success",
 		"message": "user created",
-		"data": user,
+		"data":    user,
+	})
+}
+
+func (c *userController) Login(ctx *gin.Context) {
+	var userLoginDTO dto.UserLoginDTO
+
+	if err := ctx.ShouldBindJSON(&userLoginDTO); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	// hit service
+	user, err := c.userService.Login(userLoginDTO)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"status":  "error",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status":  "success",
+		"message": "user authorized",
+		"data":    user,
 	})
 }
