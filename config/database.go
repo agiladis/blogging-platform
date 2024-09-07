@@ -1,6 +1,7 @@
 package config
 
 import (
+	"blogging-platform/model"
 	"fmt"
 	"log"
 	"os"
@@ -17,7 +18,7 @@ var (
 	err error
 )
 
-func InitDB() {
+func ConnectDatabase() (*gorm.DB, error) {
 	err := godotenv.Load()
 	if err != nil {
 		panic(err)
@@ -45,9 +46,16 @@ func InitDB() {
 			},
 		),
 	})
-
 	if err != nil {
 		log.Fatalf("Error connecting to the database: %v", err)
-		panic(err)
+		return nil, err
 	}
+
+	// migrate model
+	err = DB.Debug().AutoMigrate(&model.User{}, &model.BlogPost{})
+	if err != nil {
+		log.Fatalf("Failed to migrate database: %v", err)
+	}
+
+	return DB, nil
 }

@@ -20,7 +20,7 @@ func NewUserService(repo repository.UserRepository) *userService {
 	return &userService{userRepository: repo}
 }
 
-func (us *userService) Register(userDTO dto.UserRegisterDTO) (model.User, error) {
+func (s *userService) Register(userDTO dto.UserRegisterDTO) (model.User, error) {
 	hashedPassword, err := helper.HashPassword(userDTO.Password)
 	if err != nil {
 		return model.User{}, err
@@ -32,11 +32,11 @@ func (us *userService) Register(userDTO dto.UserRegisterDTO) (model.User, error)
 		Password: hashedPassword,
 	}
 
-	return us.userRepository.Register(user)
+	return s.userRepository.Register(user)
 }
 
-func (us *userService) Login(userDTO dto.UserLoginDTO) (model.User, error) {
-	existUser, err := us.userRepository.FindByUsername(userDTO.Username)
+func (s *userService) Login(userDTO dto.UserLoginDTO) (model.User, error) {
+	existUser, err := s.userRepository.FindByUsername(userDTO.Username)
 	if err != nil {
 		return model.User{}, err
 	}

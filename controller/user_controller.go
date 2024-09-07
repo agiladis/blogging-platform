@@ -16,7 +16,7 @@ func NewUserController(userService service.UserService) *userController {
 	return &userController{userService}
 }
 
-func (uc *userController) Register(ctx *gin.Context) {
+func (c *userController) Register(ctx *gin.Context) {
 	var userRegisterDTO dto.UserRegisterDTO
 
 	if err := ctx.ShouldBindJSON(&userRegisterDTO); err != nil {
@@ -27,7 +27,7 @@ func (uc *userController) Register(ctx *gin.Context) {
 		return
 	}
 
-	user, err := uc.userService.Register(userRegisterDTO)
+	user, err := c.userService.Register(userRegisterDTO)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"status": "error",
