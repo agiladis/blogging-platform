@@ -56,9 +56,9 @@ func (c *userController) Login(ctx *gin.Context) {
 	}
 
 	// hit service
-	user, err := c.userService.Login(userLoginDTO)
+	authRes, err := c.userService.Login(userLoginDTO)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"status":  "error",
 			"message": err.Error(),
 		})
@@ -68,6 +68,6 @@ func (c *userController) Login(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"status":  "success",
 		"message": "user authorized",
-		"data":    user,
+		"data":    authRes,
 	})
 }

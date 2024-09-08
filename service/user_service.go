@@ -9,7 +9,7 @@ import (
 
 type UserService interface {
 	Register(dto.UserRegisterDTO) (model.User, error)
-	Login(dto.UserLoginDTO) (model.User, error)
+	Login(dto.UserLoginDTO) (dto.Token, error)
 }
 
 type userService struct {
@@ -35,16 +35,21 @@ func (s *userService) Register(userDTO dto.UserRegisterDTO) (model.User, error) 
 	return s.userRepository.Register(user)
 }
 
-func (s *userService) Login(userDTO dto.UserLoginDTO) (model.User, error) {
+func (s *userService) Login(userDTO dto.UserLoginDTO) (dto.Token, error) {
 	existUser, err := s.userRepository.FindByUsername(userDTO.Username)
 	if err != nil {
-		return model.User{}, err
+		return dto.Token{}, err
 	}
 
 	err = helper.ComparePass(existUser.Password, userDTO.Password)
 	if err != nil {
-		return model.User{}, err
+		return dto.Token{}, err
 	}
 
-	return existUser, nil
+	token, err := helper.GenerateToken(existUser)
+	if err != nil {
+		return dto.Token{}, err
+	}
+
+	return token, nil
 }
