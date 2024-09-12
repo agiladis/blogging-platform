@@ -2,6 +2,7 @@ package router
 
 import (
 	"blogging-platform/controller"
+	"blogging-platform/middleware"
 	"blogging-platform/repository"
 	"blogging-platform/service"
 
@@ -15,6 +16,10 @@ func StartServer(DB *gorm.DB) *gin.Engine {
 	userService := service.NewUserService(userRepository)
 	userController := controller.NewUserController(userService)
 
+	blogPostRepository := repository.NewBlogPostRepository(DB)
+	blogPostService := service.NewBlogPostService(blogPostRepository)
+	blogPostController := controller.NewBlogPostController(blogPostService)
+
 	app := gin.Default()
 
 	// Routing
@@ -22,6 +27,12 @@ func StartServer(DB *gorm.DB) *gin.Engine {
 	{
 		userRouter.POST("/register", userController.Register)
 		userRouter.POST("/login", userController.Login)
+	}
+
+	blogPostRouter := app.Group("/posts")
+	{
+		blogPostRouter.Use(middleware.JWTMiddleware())
+		blogPostRouter.POST("/", blogPostController.CreateBlogPost)
 	}
 
 	return app
