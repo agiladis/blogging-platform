@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,9 +12,9 @@ func GetIdentityFromCtx(ctx *gin.Context) (dataOut Claims, err error) {
 	if !ok {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"status":  "error",
-			"message": "please logn first",
+			"message": "please login first",
 		})
-		return
+		return dataOut, errors.New("user not logged in")
 	}
 
 	if err = ObjectMapper(accessClaim, &dataOut); err != nil {

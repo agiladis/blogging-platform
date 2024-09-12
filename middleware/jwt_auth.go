@@ -24,7 +24,7 @@ func (c ContextKey) String() string {
 const (
 	Authorization HeaderKey  = "Authorization"
 	AccessClaim   ContextKey = "access_claim"
-	BearerAuth    string     = "Bearer"
+	BearerAuth    string     = "Bearer "
 )
 
 func JWTMiddleware() gin.HandlerFunc {
@@ -32,16 +32,16 @@ func JWTMiddleware() gin.HandlerFunc {
 		header := ctx.GetHeader(Authorization.String())
 		if header == "" {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"status": "error",
+				"status":  "error",
 				"message": "authorization header is required",
 			})
 			return
 		}
-		
+
 		token := strings.Split(header, BearerAuth)
 		if len(token) != 2 {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"status": "error",
+				"status":  "error",
 				"message": "token is required",
 			})
 			return
@@ -49,9 +49,9 @@ func JWTMiddleware() gin.HandlerFunc {
 
 		var claim helper.Claims
 		err := helper.VerifyToken(token[1], &claim)
-		if  err != nil {
+		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"status": "error",
+				"status":  "error",
 				"message": "token is not valid",
 			})
 			return

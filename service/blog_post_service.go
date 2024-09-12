@@ -18,11 +18,11 @@ func NewBlogPostService(repo repository.BlogPostRepository) *blogPostService {
 	return &blogPostService{blogPostRepository: repo}
 }
 
-func (s *blogPostService) Create(blogPostDTO dto.BlogPostDTO,userId uint) (model.BlogPost, error) {
+func (s *blogPostService) Create(blogPostDTO dto.BlogPostDTO, userId uint) (model.BlogPost, error) {
 	blogPost := model.BlogPost{
-		Title: blogPostDTO.Title,
+		Title:   blogPostDTO.Title,
 		Content: blogPostDTO.Content,
-		UserID: userId,
+		UserID:  userId,
 	}
 
 	return s.blogPostRepository.Create(blogPost)

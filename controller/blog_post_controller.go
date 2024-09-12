@@ -20,12 +20,13 @@ func NewBlogPostController(blogPostService service.BlogPostService) *blogPostCon
 func (c *blogPostController) CreateBlogPost(ctx *gin.Context) {
 	var blogPostDTO dto.BlogPostDTO
 
-	if err := ctx.ShouldBindBodyWithJSON(&blogPostDTO); err != nil {
+	if err := ctx.ShouldBindJSON(&blogPostDTO); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"status":  "error",
 			"message": err.Error(),
 			"data":    nil,
 		})
+		return
 	}
 
 	// get user id from ctx
@@ -46,7 +47,7 @@ func (c *blogPostController) CreateBlogPost(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusCreated, gin.H{
 		"status":  "success",
-		"message": "user created",
+		"message": "blog post created",
 		"data":    blogPost,
 	})
 }
