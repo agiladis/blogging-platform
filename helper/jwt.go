@@ -57,3 +57,17 @@ func GenerateToken(user model.User) (dto.Token, error) {
 
 	return dto.Token{AccessToken: string(IDToken)}, nil
 }
+
+func VerifyToken(token string, Claims any) error {
+	verifiedToken, err := jwt.Verify(jwt.HS256, SharedKey, []byte(token))
+	if err != nil {
+		return err
+	}
+
+	err = verifiedToken.Claims(&Claims)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
