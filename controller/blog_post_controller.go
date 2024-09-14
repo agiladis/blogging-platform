@@ -51,3 +51,21 @@ func (c *blogPostController) CreateBlogPost(ctx *gin.Context) {
 		"data":    blogPost,
 	})
 }
+
+func (c *blogPostController) GetAllPosts(ctx *gin.Context) {
+	blogPosts, err := c.blogPostService.GetAll()
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			"status":  "success",
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status":  "success",
+		"message": "get all post success",
+		"data":    blogPosts,
+	})
+}
