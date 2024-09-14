@@ -8,6 +8,7 @@ import (
 
 type BlogPostService interface {
 	Create(dto.BlogPostDTO, uint) (model.BlogPost, error)
+	GetAll() ([]model.BlogPost, error)
 }
 
 type blogPostService struct {
@@ -26,4 +27,8 @@ func (s *blogPostService) Create(blogPostDTO dto.BlogPostDTO, userId uint) (mode
 	}
 
 	return s.blogPostRepository.Create(blogPost)
+}
+
+func (s *blogPostService) GetAll() ([]model.BlogPost, error) {
+	return s.blogPostRepository.GetAll()
 }
