@@ -34,6 +34,7 @@ func StartServer(DB *gorm.DB) *gin.Engine {
 		blogPostRouter.Use(middleware.JWTMiddleware())
 		blogPostRouter.POST("/", blogPostController.CreateBlogPost)
 		blogPostRouter.GET("/", blogPostController.GetAllPosts)
+		blogPostRouter.GET("/:id", blogPostController.GetPostById)
 	}
 
 	return app
