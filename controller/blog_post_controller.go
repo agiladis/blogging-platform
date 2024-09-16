@@ -5,6 +5,7 @@ import (
 	"blogging-platform/helper"
 	"blogging-platform/service"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -67,5 +68,33 @@ func (c *blogPostController) GetAllPosts(ctx *gin.Context) {
 		"status":  "success",
 		"message": "get all post success",
 		"data":    blogPosts,
+	})
+}
+
+func (c *blogPostController) GetPostById(ctx *gin.Context) {
+	blogPostId, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"message": "invalid ID",
+			"data":    nil,
+		})
+		return
+	}
+
+	blogPost, err := c.blogPostService.GetById(uint(blogPostId))
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			"status":  "error",
+			"message": "post not found",
+			"data":    nil,
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"status":  "success",
+		"message": "get post success",
+		"data":    blogPost,
 	})
 }
