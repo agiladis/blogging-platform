@@ -36,6 +36,5 @@ func (r *blogPostRepository) GetAll() ([]model.BlogPost, error) {
 func (r *blogPostRepository) GetById(id uint) (model.BlogPost, error) {
 	var blogPost model.BlogPost
 	err := r.DB.Model(&model.BlogPost{}).Where("id = ?", id).First(&blogPost).Error
-	// err := r.DB.Preload("User").Model(&model.BlogPost{}).Where("id = ?", id).First(&blogPost).Error
 	return blogPost, err
 }
